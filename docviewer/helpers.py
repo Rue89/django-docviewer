@@ -1,6 +1,6 @@
 import os
 from subprocess import Popen, PIPE
-from docviewer.settings import IMAGE_FORMAT
+from docviewer.settings import IMAGE_FORMAT, DOCSPLIT_PATH
 from docviewer.models import Document
 from datetime import datetime
 import shutil
@@ -9,11 +9,11 @@ def docsplit(document):
     
     path = document.get_root_path()
     
-    commands = ["/usr/bin/docsplit images --size 700x,1000x,180x --format %s --output %s %s/%s.pdf" % (IMAGE_FORMAT,path, path,document.slug), 
-                "/usr/bin/docsplit text --pages all --output %s %s/%s.pdf" % (path, path,document.slug)]
+    commands = [DOCSPLIT_PATH + "docsplit images --size 700x,1000x,180x --format %s --output %s %s/%s.pdf" % (IMAGE_FORMAT,path, path,document.slug), 
+                DOCSPLIT_PATH + "docsplit text --pages all --output %s %s/%s.pdf" % (path, path,document.slug)]
     
     if document.filename.split('.')[-1].lower() != 'pdf':
-        cmd = "/usr/bin/docsplit pdf --output %s %s" % (path, document.get_file_path())
+        cmd = DOCSPLIT_PATH + "docsplit pdf --output %s %s" % (path, document.get_file_path())
         commands.insert(0, cmd)
     
     for command in commands:

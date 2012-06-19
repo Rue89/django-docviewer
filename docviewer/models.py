@@ -76,11 +76,11 @@ class Document(TimeStampedModel, StatusModel):
     
     @property
     def text(self):
-        path = "%sall.txt" %( self.document.get_root_path())
-        f = open(path, 'r').read()
+        path = "%s/%s.txt" %( self.get_root_path(), self.slug)
+        f = open(path, 'r')
         data = f.read()
         f.close()
-        return data
+        return  data
     
     
     def save(self, *args, **kwargs):
@@ -118,17 +118,17 @@ class Document(TimeStampedModel, StatusModel):
         # concatenate all text files
         
         all_txt = open("%s/%s.txt" % (self.get_root_path(), self.slug), "w")
-        
+      
         self.page_count = 0
         self.pages_set.all().delete()
         for f in os.listdir(self.get_root_path()):
             if f[-4:] == '.txt' and f != "%s.txt" % self.slug:
                 
+                
                 self.page_count += 1
                 
                 tmp_file = open("%s/%s" % (self.get_root_path(), f))
                 all_txt.write(tmp_file.read())
-                
                 Page(document=self, page=RE_PAGE.match(f).group(1)).save()
                 
                 tmp_file.close()
