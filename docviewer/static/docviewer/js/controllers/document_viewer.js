@@ -120,7 +120,7 @@ docviewer.load = function(documentRep, options) {
   var defaults = {
     container : document.body,
     zoom      : 'auto',
-    sidebar   : true
+    sidebar   : false
   };
   options            = _.extend({}, defaults, options);
   options.fixedSize  = !!(options.width || options.height);
