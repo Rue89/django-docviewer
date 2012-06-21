@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.sites.models import Site
 
 from model_utils.models import TimeStampedModel, StatusModel
 from model_utils import Choices
@@ -40,7 +41,8 @@ class Document(TimeStampedModel, StatusModel):
     
     @models.permalink
     def get_absolute_url(self):
-        return ("docviewer_viewer_view", (), {'slug' : self.slug, 'pk': self.pk})
+        current_site = Site.objects.get_current()
+        return ("docviewer_viewer_view", (), {'slug' : self.slug, 'pk': self.pk}).replace('http://' + current_site.domain, '')
     
     
     def __unicode__(self):
