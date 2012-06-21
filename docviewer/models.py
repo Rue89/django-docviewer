@@ -42,7 +42,8 @@ class Document(TimeStampedModel, StatusModel):
     @models.permalink
     def get_absolute_url(self):
         current_site = Site.objects.get_current()
-        return ("docviewer_viewer_view", (), {'slug' : self.slug, 'pk': self.pk}).replace('http://' + current_site.domain, '')
+        #return ("docviewer_viewer_view", (), {'slug' : self.slug, 'pk': self.pk}).replace('http://' + current_site.domain, '')
+        return ("docviewer_viewer_view", (), {'slug' : self.slug, 'pk': self.pk}).replace('http://localhost:8000', '')
     
     
     def __unicode__(self):

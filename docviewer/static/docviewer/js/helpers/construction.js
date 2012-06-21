@@ -289,7 +289,7 @@ _.extend(docviewer.Schema.helpers, {
 		}
 
 		if (this.viewer.options.sidebar) {
-			this.viewer.$('.docviewer-sidebar').show();
+			this.viewer.$('.docviewer-sidebar').remove();
 		}
 
 		// Check if the zoom is showing, and if not, shorten the width of search
