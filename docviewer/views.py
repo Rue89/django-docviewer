@@ -51,7 +51,7 @@ class JsonDocumentView(BaseDetailView):
         json['created_at'] = rfc2822_date(document.created)
         json['updated_at'] = rfc2822_date(document.modified)
         
-        json['canonical_url'] = get_absolute_url(reverse("docviewer_viewer_view", kwargs = {'pk' : document.pk, 'slug' : document.slug})).replace('http://localhost:8000', '')
+        json['canonical_url'] = get_absolute_url(reverse("docviewer_viewer_view", kwargs = {'pk' : document.pk, 'slug' : document.slug}))
         
         json['contributor'] = document.contributor
         json['contributor_organization'] = document.contributor_organization
@@ -60,21 +60,21 @@ class JsonDocumentView(BaseDetailView):
         
         json['resources'] = {}
         if document.download is True:
-            json['resources']['pdf'] = get_absolute_url(document.doc_url).replace('http://localhost:8000', '')
+            json['resources']['pdf'] = get_absolute_url(document.doc_url)
             
         
-        json['resources']['text'] = get_absolute_url(document.text_url).replace('http://localhost:8000', '')
-        json['resources']['thumbnail'] = get_absolute_url(document.thumbnail_url).replace('http://localhost:8000', '')
-        json['resources']['search'] = get_absolute_url(reverse("docviewer_search_view", kwargs = {'pk' : document.pk, 'slug' : document.slug})).replace('http://localhost:8000', '') + '?q={query}'
-        json['resources']['print_annotations'] = get_absolute_url(reverse("docviewer_printannotations_view", kwargs = {'pk' : document.pk, 'slug' : document.slug})).replace('http://localhost:8000', '')
+        json['resources']['text'] = get_absolute_url(document.text_url)
+        json['resources']['thumbnail'] = get_absolute_url(document.thumbnail_url)
+        json['resources']['search'] = get_absolute_url(reverse("docviewer_search_view", kwargs = {'pk' : document.pk, 'slug' : document.slug})) + '?q={query}'
+        json['resources']['print_annotations'] = get_absolute_url(reverse("docviewer_printannotations_view", kwargs = {'pk' : document.pk, 'slug' : document.slug}))
         
         
         json['resources']['page'] = {}
-        json['resources']['page']['text'] = get_absolute_url(document.text_page_url % {'page' : '{page}'}).replace('http://localhost:8000', '')
-        json['resources']['page']['image'] = get_absolute_url(document.image_page_url % {'page' : '{page}', 'size' : '{size}'}).replace('http://localhost:8000', '')
+        json['resources']['page']['text'] = get_absolute_url(document.text_page_url % {'page' : '{page}'})
+        json['resources']['page']['image'] = get_absolute_url(document.image_page_url % {'page' : '{page}', 'size' : '{size}'})
         
         #FIXME : THE F**** ERROR IS HERE !!!!
-        #json['resources']['related_article'] = get_absolute_url(document.related_url).replace('http://localhost:8000', '')
+        #json['resources']['related_article'] = get_absolute_url(document.related_url)
         
 
         json['resources']['published_url'] = json['canonical_url']
