@@ -12,13 +12,16 @@ from viewer.views import image
 
 SITE = Site.objects.get_current()
 
+#TODO : Fix these two lines
+SITE.domain = "192.168.0.143:8000"
+SITE.save()
+
 def get_absolute_url(relative_url):
     
     if relative_url[0:7] == 'http://' or relative_url[0:8] == 'https://':
         return relative_url
     
-    return "http://192.168.0.143:8000%s" % (relative_url)
-    #return "http://%s%s" % (SITE.domain, relative_url)
+    return "http://%s%s" % (SITE.domain, relative_url)
 
 class SearchDocumentView(View):
     
@@ -75,7 +78,7 @@ class JsonDocumentView(BaseDetailView):
         json['resources']['page'] = {}
         json['resources']['page']['text'] = get_absolute_url(document.text_page_url % {'page' : '{page}'})
         #json['resources']['page']['image'] = get_absolute_url(document.image_page_url % {'page' : '{page}', 'size' : '{size}'})
-        json['resources']['page']['image'] = "http://192.168.0.143:8000/viewer/image/%s/%s/%s/" % (document.pk, '{size}', '{page}')
+        json['resources']['page']['image'] = "http://" + SITE.domain + "/viewer/image/%s/%s/%s/" % (document.pk, '{size}', '{page}')
         #json['resources']['page']['image'] = reverse('image_docviewer', kwargs = {'size' : '{size}', 'page' : '{page}'})
         
         
