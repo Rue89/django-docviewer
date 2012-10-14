@@ -12,9 +12,9 @@ from viewer.views import image
 
 SITE = Site.objects.get_current()
 
-#TODO : Fix these two lines
-SITE.domain = "192.168.0.143:8000"
-SITE.save()
+#TODO : Fix these two lines when working on Denis' instance
+#SITE.domain = "192.168.0.143:8000"
+#SITE.save()
 
 def get_absolute_url(relative_url):
     
