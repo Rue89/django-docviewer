@@ -80,9 +80,12 @@ class Document(TimeStampedModel, StatusModel):
     @property
     def text(self):
         path = "%s/%s.txt" %( self.get_root_path(), self.slug)
-        f = open(path, 'r')
-        data = f.read()
-        f.close()
+        try:
+            f = open(path, 'r')
+            data = f.read()
+            f.close()
+        except IOError, e:
+            data = ''
         return  data
     
     
