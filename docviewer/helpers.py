@@ -5,10 +5,19 @@ from docviewer.models import Document
 from datetime import datetime
 import shutil
 
+from django.utils.translation import ugettext as _
+from django.db import models
+
+#FIXME : haystack error cannot import article
+
+from article.models import Article
+from bibliography.models import Bibliography, BpIssue
+from document.models import Document as FuturiblesDocument
+from revue.models import RevueIssue, RevueArticle
+
 def docsplit(document):
     
     path = document.get_root_path()
-    
     commands = [DOCSPLIT_PATH + "docsplit images --size 700x,1000x,180x --format %s --output %s %s/%s.pdf" % (IMAGE_FORMAT,path, path,document.slug), 
                 DOCSPLIT_PATH + "docsplit text --pages all --output %s %s/%s.pdf" % (path, path,document.slug)]
     
@@ -23,6 +32,7 @@ def docsplit(document):
             raise Exception(result)
         
     # rename directories
+    #FIXME
     shutil.rmtree("%s/%s" % (path, "large"), ignore_errors=True)
     os.rename("%s/%s" % (path, "1000x"), "%s/%s" % (path, "large"))
     
@@ -31,7 +41,7 @@ def docsplit(document):
     
     shutil.rmtree("%s/%s" % (path, "small"), ignore_errors=True)
     os.rename("%s/%s" % (path, "180x"), "%s/%s" % (path, "small"))    
-        
+
 def create_document(filepath, doc_attributes):
     
     d = Document(**doc_attributes)
@@ -52,7 +62,6 @@ def generate_document(doc_id,  task_id=None):
     document.status = Document.STATUS.running
     document.task_start = datetime.now()
     document.save()
-    
     try:
         docsplit(document)
     
@@ -61,6 +70,45 @@ def generate_document(doc_id,  task_id=None):
         document.task_id = None
         document.task_error = None
         document.save()
+        
+        #FIXME : haystack error cannot import article
+        try:
+            article = Article.objects.get(docviewer=document)
+            article.save()
+        except Article.DoesNotExist:
+            pass
+
+        try:
+            bibliography = Bibliography.objects.get(docviewer=document)
+            bibliography.save()
+        except Bibliography.DoesNotExist:
+            pass
+
+        try:
+            bp_issue = BpIssue.objects.get(docviewer=document)
+            bp_issue.save()
+        except BpIssue.DoesNotExist:
+            pass
+
+        try:
+            futuribles_document = FuturiblesDocument.objects.get(docviewer=document)
+            futuribles_document.save()
+        except FuturiblesDocument.DoesNotExist:
+            pass
+
+        try:
+            revue_issue = RevueIssue.objects.get(docviewer=document)
+            revue_issue.save()
+        except RevueIssue.DoesNotExist:
+            pass
+
+        try:
+            revue_article = RevueArticle.objects.get(docviewer=document)
+            revue_article.save()
+        except RevueArticle.DoesNotExist:
+            pass
+        
+
     except Exception, e:
         
         try:
